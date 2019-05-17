@@ -1,0 +1,24 @@
+{
+    "name": "object_detection",
+    "version": 1,
+    "type": "GStreamer",
+    "template":"urisourcebin uri=\"{source[uri]}\" ! decodebin ! tee name=t ! video/x-raw ! videoconvert name=\"videoconvert\" ! queue ! gvadetect inference-id=inf0 model=\"{models[object_detection][1][network]}\" model-proc=\"{models[object_detection][1][proc]}\" name=\"detection\" ! gvametaconvert converter=json method=detection source=\"{source[uri]}\" name=\"jsonmetaconvert\" ! queue ! appsink name=appsink t. ! queue ! x264enc tune=zerolatency ! h264parse ! splitmuxsink location={source[name]}_%02d.mp4 max-size-time=10000000000 max-size-bytes=1000000",
+    "description": "Object Detection Pipeline",
+
+    "parameters": {
+	"every-nth-frame": {
+	    "element":"detection"
+	},
+	"cpu-streams": {
+	    "element":"detection"
+	},
+	"n-threads": {
+	    "element":"videoconvert"
+	},
+	"nireq": {
+	    "element":"detection"
+	}
+    }
+}
+
+
